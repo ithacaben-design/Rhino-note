@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post-it Infinite Peel</title>
+    <title>Spiral Origami Pad</title>
     <style>
         body {
             margin: 0;
@@ -17,33 +17,34 @@
             touch-action: manipulation;
         }
 
-        .container {
+        .pad-container {
             position: relative;
             width: 200px;
             height: 200px;
         }
 
-        /* The Static Stack underneath */
-        .stack-base {
+        /* The White Stack Pad */
+        .white-stack-base {
             position: absolute;
             width: 200px;
             height: 200px;
-            background: #f1c40f;
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            background: #ffffff;
+            box-shadow: 2px 2px 15px rgba(0,0,0,0.4);
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: sans-serif;
             font-weight: bold;
             font-size: 24px;
-            color: #444;
+            color: #bdc3c7;
             cursor: pointer;
-            z-index: 1;
+            z-index: 50;
             user-select: none;
+            border-radius: 2px;
         }
 
-        /* Each individual wandering animal */
-        .wandering-note {
+        /* Individual Origami Pieces */
+        .peeled-note {
             position: absolute;
             width: 200px;
             height: 200px;
@@ -54,95 +55,122 @@
             align-items: center;
             font-family: sans-serif;
             font-weight: bold;
-            color: white;
-            transition: all 1s ease;
+            color: #333;
+            transition: clip-path 1.2s, background 0.5s;
         }
 
-        @keyframes wanderAround {
-            0%, 100% { transform: translate(0, 0) scale(0.5) rotate(0deg); }
-            25%  { transform: translate(180px, -200px) scale(0.4) rotate(15deg); }
-            50%  { transform: translate(-180px, -50px) scale(0.5) rotate(-10deg); }
-            75%  { transform: translate(100px, 200px) scale(0.4) rotate(20deg); }
+        /* THE SPIRAL TO THE RIGHT ANIMATION */
+        @keyframes spiralRight {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(0.6);
+                opacity: 1;
+            }
+            25% {
+                transform: translate(150px, -100px) rotate(90deg) scale(0.5);
+            }
+            50% {
+                transform: translate(300px, 0px) rotate(180deg) scale(0.4);
+            }
+            75% {
+                transform: translate(450px, 100px) rotate(270deg) scale(0.3);
+            }
+            100% {
+                transform: translate(800px, 0px) rotate(360deg) scale(0.1);
+                opacity: 0;
+            }
         }
 
-        .rhino-shape {
-            background: #bdc3c7 !important;
-            clip-path: polygon(15% 45%, 35% 15%, 45% 45%, 90% 45%, 100% 95%, 0% 95%);
+        /* Shapes */
+        .lips-shape {
+            clip-path: polygon(10% 45%, 30% 30%, 50% 45%, 70% 30%, 90% 45%, 100% 60%, 85% 90%, 50% 100%, 15% 90%, 0% 60%);
         }
 
         .turtle-shape {
-            background: #2ecc71 !important;
             clip-path: polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%);
+        }
+
+        .kite-shape {
+            clip-path: polygon(50% 0%, 100% 45%, 50% 100%, 0% 45%);
         }
 
         .controls {
             position: absolute;
             bottom: 30px;
             display: flex;
-            gap: 15px;
+            gap: 10px;
+            z-index: 100;
         }
         .btn {
             background: rgba(255,255,255,0.1);
             border: 1px solid white;
             color: white;
-            padding: 10px 20px;
+            padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 14px;
         }
         .btn.active { background: white; color: #2c3e50; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="mainContainer">
-        <div class="stack-base" id="pad">Tap Me</div>
+    <div class="pad-container" id="mainArea">
+        <div class="white-stack-base" id="pad">Tap Me</div>
     </div>
 
     <div class="controls">
-        <button id="btnRhino" class="btn active">Rhino Mode</button>
-        <button id="btnTurtle" class="btn">Turtle Mode</button>
+        <button id="setLips" class="btn active">💋 Lips</button>
+        <button id="setTurtle" class="btn">🐢 Turtle</button>
+        <button id="setKite" class="btn">🪁 Kite</button>
     </div>
 
     <script>
-        const container = document.getElementById('mainContainer');
         const pad = document.getElementById('pad');
-        const btnR = document.getElementById('btnRhino');
-        const btnT = document.getElementById('btnTurtle');
-
-        let mode = 'rhino';
-
-        btnR.onclick = () => { mode = 'rhino'; btnR.classList.add('active'); btnT.classList.remove('active'); };
-        btnT.onclick = () => { mode = 'turtle'; btnT.classList.add('active'); btnR.classList.remove('active'); };
-
-        const createAnimal = (e) => {
-            if(e) e.preventDefault();
-
-            // 1. Create a new "peeled" note
-            const newNote = document.createElement('div');
-            newNote.className = 'wandering-note';
-            newNote.innerText = "I Love You";
-            
-            // Set initial color based on mode
-            newNote.style.background = (mode === 'rhino') ? "#f1c40f" : "#2ecc71";
-            container.appendChild(newNote);
-
-            // 2. The "Folding" sequence
-            setTimeout(() => {
-                newNote.innerText = "";
-                if (mode === 'rhino') {
-                    newNote.classList.add('rhino-shape');
-                } else {
-                    newNote.classList.add('turtle-shape');
-                }
-                
-                // 3. Start wandering with a random speed so they don't all move together
-                const duration = 10 + Math.random() * 10;
-                newNote.style.animation = `wanderAround ${duration}s infinite ease-in-out`;
-            }, 800);
+        const mainArea = document.getElementById('mainArea');
+        const modeButtons = {
+            lips: document.getElementById('setLips'),
+            turtle: document.getElementById('setTurtle'),
+            kite: document.getElementById('setKite')
         };
 
-        pad.addEventListener('mousedown', createAnimal);
-        pad.addEventListener('touchstart', createAnimal, {passive: false});
+        let currentMode = 'lips';
+        const colors = ['#ff7675', '#fdcb6e', '#00cec9', '#a29bfe', '#55efc4', '#fab1a0', '#e84393', '#0984e3'];
+
+        Object.keys(modeButtons).forEach(mode => {
+            modeButtons[mode].onclick = () => {
+                currentMode = mode;
+                Object.values(modeButtons).forEach(b => b.classList.remove('active'));
+                modeButtons[mode].classList.add('active');
+            };
+        });
+
+        const spawn = (e) => {
+            if(e) e.preventDefault();
+
+            const note = document.createElement('div');
+            note.className = 'peeled-note';
+            note.innerText = "I Love You";
+            note.style.background = colors[Math.floor(Math.random() * colors.length)];
+            mainArea.appendChild(note);
+
+            setTimeout(() => {
+                note.innerText = "";
+                
+                if (currentMode === 'lips') note.classList.add('lips-shape');
+                else if (currentMode === 'turtle') note.classList.add('turtle-shape');
+                else if (currentMode === 'kite') note.classList.add('kite-shape');
+
+                // Spiral animation (Slower for graceful drift)
+                const duration = 12 + Math.random() * 6;
+                note.style.animation = `spiralRight ${duration}s forwards ease-in`;
+
+                // Clean up once they've disappeared to the right
+                setTimeout(() => note.remove(), duration * 1000);
+            }, 1000);
+        };
+
+        pad.addEventListener('mousedown', spawn);
+        pad.addEventListener('touchstart', spawn, {passive: false});
     </script>
 </body>
 </html>
