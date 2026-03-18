@@ -3,56 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turtle Love Infinity</title>
+    <title>Post-it Infinite Peel</title>
     <style>
         body {
             margin: 0;
-            background: #1e272e; /* Darker ocean-like background */
+            background: #2c3e50;
             overflow: hidden;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             touch-action: manipulation;
         }
 
-        .stack {
+        .container {
             position: relative;
             width: 200px;
             height: 200px;
         }
 
-        .note-back {
+        /* The Static Stack underneath */
+        .stack-base {
             position: absolute;
             width: 200px;
             height: 200px;
-            background: #27ae60;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-            transform: rotate(-2deg);
-        }
-
-        .note-top {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: #2ecc71; /* Bright Green */
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
-            cursor: pointer;
+            background: #f1c40f;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: sans-serif;
             font-weight: bold;
             font-size: 24px;
-            color: #1e272e;
-            z-index: 10;
+            color: #444;
+            cursor: pointer;
+            z-index: 1;
             user-select: none;
-            text-align: center;
-            transition: background 0.5s, color 0.5s;
         }
 
-        /* Slow, Flowing Figure-8 Swim */
-        @keyframes turtleInfinity {
-            0% { transform: translate(0, 0) scale(0.6) rotate(0deg); }
-            25% { transform: translate(160px, -60px) scale(0.6) rotate(15deg); }
-            50% { transform: translate(0, 0) scale(0
+        /* Each individual wandering animal */
+        .wandering-note {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+            font-weight: bold;
+            color: white;
+            transition: all 1s ease;
+        }
+
+        @keyframes wanderAround {
+            0%, 100% { transform: translate(0, 0) scale(0.5) rotate(0deg); }
+            25%  { transform: translate(180px, -200px) scale(0.4) rotate(15deg); }
+            50%  { transform: translate(-180px, -50px) scale(0.5) rotate(-10deg); }
+            75%  { transform: translate(100px, 200px) scale(0.4) rotate(20deg); }
+        }
+
+        .rhino-shape {
+            background: #bdc3c7 !important;
+            clip-path: polygon(15% 45%, 35% 15%, 45% 45%, 90% 45%, 100% 95%, 0% 95%);
+        }
+
+        .turtle-shape {
+            background: #2ecc71 !important;
+            clip-path: polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%);
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        .btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid white;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn.active { background: white; color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <div class="stack-base" id="pad">Tap Me</div>
+    </div>
+
+    <div class="controls">
+        <button id="btnRhino" class="btn active">Rhino Mode</button>
+        <button id="btnTurtle" class="btn">Turtle Mode</button>
+    </div>
+
+    <script>
+        const container = document.getElementById('mainContainer');
+        const pad = document.getElementById('pad');
+        const btnR = document.getElementById('btnRhino');
+        const btnT = document.getElementById('btnTurtle');
+
+        let mode = 'rhino';
+
+        btnR.onclick = () => { mode = 'rhino'; btnR.classList.add('active'); btnT.classList.remove('active'); };
+        btnT.onclick = () => { mode = 'turtle'; btnT.classList.add('active'); btnR.classList.remove('active'); };
+
+        const createAnimal = (e) => {
+            if(e) e.preventDefault();
+
+            // 1. Create a new "peeled" note
+            const newNote = document.createElement('div');
+            newNote.className = 'wandering-note';
+            newNote.innerText = "I Love You";
+            
+            // Set initial color based on mode
+            newNote.style.background = (mode === 'rhino') ? "#f1c40f" : "#2ecc71";
+            container.appendChild(newNote);
+
+            // 2. The "Folding" sequence
+            setTimeout(() => {
+                newNote.innerText = "";
+                if (mode === 'rhino') {
+                    newNote.classList.add('rhino-shape');
+                } else {
+                    newNote.classList.add('turtle-shape');
+                }
+                
+                // 3. Start wandering with a random speed so they don't all move together
+                const duration = 10 + Math.random() * 10;
+                newNote.style.animation = `wanderAround ${duration}s infinite ease-in-out`;
+            }, 800);
+        };
+
+        pad.addEventListener('mousedown', createAnimal);
+        pad.addEventListener('touchstart', createAnimal, {passive: false});
+    </script>
+</body>
+</html>
