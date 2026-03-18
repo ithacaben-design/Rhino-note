@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinity Rhino Love</title>
+    <title>Rhino Love Infinity</title>
     <style>
         body {
             margin: 0;
@@ -22,7 +22,6 @@
             height: 200px;
         }
 
-        /* Background notes in darker greys */
         .note-back {
             position: absolute;
             width: 200px;
@@ -32,12 +31,11 @@
             transform: rotate(-2deg);
         }
 
-        /* Top Note - Modern Grey */
         .note-top {
             position: absolute;
             width: 200px;
             height: 200px;
-            background: #bdc3c7; /* Classic Grey */
+            background: #bdc3c7; /* Solid Grey */
             box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
             cursor: pointer;
             display: flex;
@@ -50,30 +48,30 @@
             z-index: 10;
             user-select: none;
             text-align: center;
-            transition: all 0.5s ease;
+            transition: background 0.5s, color 0.5s;
         }
 
-        /* The Rhino Figure-8 Path */
+        /* Fixed Figure-8 Charge */
         @keyframes rhinoInfinity {
-            0% { transform: translate(0, 0) rotate(0deg) scale(0.5); }
-            25% { transform: translate(180px, -80px) rotate(20deg) scale(0.5); }
-            50% { transform: translate(0, 0) rotate(0deg) scale(0.5); }
-            75% { transform: translate(-180px, 80px) rotate(-20deg) scale(0.5); }
-            100% { transform: translate(0, 0) rotate(0deg) scale(0.5); }
+            0% { transform: translate(0, 0) scale(0.5) rotate(0deg); }
+            25% { transform: translate(150px, -80px) scale(0.5) rotate(15deg); }
+            50% { transform: translate(0, 0) scale(0.5) rotate(0deg); }
+            75% { transform: translate(-150px, 80px) scale(0.5) rotate(-15deg); }
+            100% { transform: translate(0, 0) scale(0.5) rotate(0deg); }
         }
 
-        /* The Initial Fold into Rhino Shape */
+        /* Simplified Rhino Fold */
         @keyframes foldToRhino {
             0% { transform: scale(1); clip-path: inset(0); }
             100% { 
                 transform: scale(0.5); 
-                /* Rhino Silhouette Clip-Path */
-                clip-path: polygon(10% 40%, 30% 10%, 40% 40%, 90% 40%, 100% 100%, 0% 100%);
+                /* Rugged Rhino Shape */
+                clip-path: polygon(15% 45%, 35% 15%, 45% 45%, 90% 45%, 100% 95%, 0% 95%);
             }
         }
 
-        .rhino-shape {
-            animation: foldToRhino 1.5s forwards ease-in-out;
+        .rhino-folded {
+            animation: foldToRhino 1.2s forwards ease-in-out;
         }
 
         .infinity-charge {
@@ -86,39 +84,25 @@
 
     <div class="stack">
         <div class="note-back" style="transform: rotate(3deg); background: #95a5a6;"></div>
-        <div class="note-back"></div>
+        <div class="note-back" style="transform: rotate(-4deg); background: #7f8c8d;"></div>
         <div id="topNote" class="note-top">Tap Me</div>
     </div>
 
     <script>
         const note = document.getElementById('topNote');
-        let active = false;
+        let isRunning = false;
 
-        const startRhino = (e) => {
-            if (active) return;
-            active = true;
+        const launchRhino = (e) => {
+            if (isRunning) return;
+            isRunning = true;
             if(e) e.preventDefault();
 
-            // 1. Change text
+            // 1. Text changes to "I Love You"
             note.innerText = "I Love You";
-            note.style.background = "#95a5a6"; // Darken slightly on tap
+            note.style.background = "#95a5a6";
             note.style.color = "white";
 
-            // 2. Fold into Rhino
+            // 2. Wait a moment, then fold
             setTimeout(() => {
                 note.innerText = "";
-                note.classList.add('rhino-shape');
-                
-                // 3. Start the infinite figure-8 charge
-                setTimeout(() => {
-                    note.classList.remove('rhino-shape');
-                    note.classList.add('infinity-charge');
-                }, 1500);
-            }, 1200);
-        };
-
-        note.addEventListener('click', startRhino);
-        note.addEventListener('touchstart', startRhino, {passive: false});
-    </script>
-</body>
-</html>
+                note.
