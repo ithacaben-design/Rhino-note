@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rhino Love Infinity</title>
+    <title>Turtle Love Infinity</title>
     <style>
         body {
             margin: 0;
-            background: #2c3e50;
+            background: #1e272e; /* Darker ocean-like background */
             overflow: hidden;
             display: flex;
             justify-content: center;
@@ -26,7 +26,7 @@
             position: absolute;
             width: 200px;
             height: 200px;
-            background: #7f8c8d;
+            background: #27ae60;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
             transform: rotate(-2deg);
         }
@@ -35,7 +35,7 @@
             position: absolute;
             width: 200px;
             height: 200px;
-            background: #bdc3c7; /* Solid Grey */
+            background: #2ecc71; /* Bright Green */
             box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
             cursor: pointer;
             display: flex;
@@ -44,65 +44,15 @@
             font-family: sans-serif;
             font-weight: bold;
             font-size: 24px;
-            color: #2c3e50;
+            color: #1e272e;
             z-index: 10;
             user-select: none;
             text-align: center;
             transition: background 0.5s, color 0.5s;
         }
 
-        /* Fixed Figure-8 Charge */
-        @keyframes rhinoInfinity {
-            0% { transform: translate(0, 0) scale(0.5) rotate(0deg); }
-            25% { transform: translate(150px, -80px) scale(0.5) rotate(15deg); }
-            50% { transform: translate(0, 0) scale(0.5) rotate(0deg); }
-            75% { transform: translate(-150px, 80px) scale(0.5) rotate(-15deg); }
-            100% { transform: translate(0, 0) scale(0.5) rotate(0deg); }
-        }
-
-        /* Simplified Rhino Fold */
-        @keyframes foldToRhino {
-            0% { transform: scale(1); clip-path: inset(0); }
-            100% { 
-                transform: scale(0.5); 
-                /* Rugged Rhino Shape */
-                clip-path: polygon(15% 45%, 35% 15%, 45% 45%, 90% 45%, 100% 95%, 0% 95%);
-            }
-        }
-
-        .rhino-folded {
-            animation: foldToRhino 1.2s forwards ease-in-out;
-        }
-
-        .infinity-charge {
-            animation: rhinoInfinity 5s infinite ease-in-out;
-            pointer-events: none;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="stack">
-        <div class="note-back" style="transform: rotate(3deg); background: #95a5a6;"></div>
-        <div class="note-back" style="transform: rotate(-4deg); background: #7f8c8d;"></div>
-        <div id="topNote" class="note-top">Tap Me</div>
-    </div>
-
-    <script>
-        const note = document.getElementById('topNote');
-        let isRunning = false;
-
-        const launchRhino = (e) => {
-            if (isRunning) return;
-            isRunning = true;
-            if(e) e.preventDefault();
-
-            // 1. Text changes to "I Love You"
-            note.innerText = "I Love You";
-            note.style.background = "#95a5a6";
-            note.style.color = "white";
-
-            // 2. Wait a moment, then fold
-            setTimeout(() => {
-                note.innerText = "";
-                note.
+        /* Slow, Flowing Figure-8 Swim */
+        @keyframes turtleInfinity {
+            0% { transform: translate(0, 0) scale(0.6) rotate(0deg); }
+            25% { transform: translate(160px, -60px) scale(0.6) rotate(15deg); }
+            50% { transform: translate(0, 0) scale(0
