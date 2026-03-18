@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhino Fold</title>
+    <style>
+        body {
+            margin: 0;
+            background: #2c3e50;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            touch-action: manipulation;
+        }
+
+        .stack {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .note-back {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: #ffeb3b;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            transform: rotate(-2deg);
+        }
+
+        .note-top {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: #fff176;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 24px;
+            color: #555;
+            z-index: 10;
+            user-select: none;
+            transition: opacity 0.3s;
+        }
+
+        /* The Rhino "Heavy" Fold Animation */
+        @keyframes rhinoFold {
+            0% { transform: scale(1) rotate(0); clip-path: inset(0); }
+            20% { /* Fold into a thick triangle (The Body) */
+                transform: scale(0.9) rotateX(20deg);
+                clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            }
+            40% { /* Adding the 'Horn' and 'Tail' points */
+                transform: scale(0.8) rotateY(30deg);
+                clip-path: polygon(20% 40%, 50% 0%, 80% 40%, 100% 100%, 0% 100%);
+            }
+            60% { /* Settling into the Rhino shape */
+                transform: scale(0.6) translate(-20px, 10px);
+                clip-path: polygon(10% 40%, 30% 10%, 40% 40%, 90% 40%, 100% 100%, 0% 100%);
+                opacity: 1;
+            }
+            80% { /* Charging forward */
+                transform: scale(0.55) translate(100px, 10px);
+                opacity: 1;
+            }
+            100% { /* Exit Stage Right */
+                transform: scale(0.5) translate(2000px, 10px);
+                opacity: 0;
+            }
+        }
+
+        .animate-rhino {
+            animation: rhinoFold 4s forwards ease-in-out;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stack">
+        <div class="note-back" style="transform: rotate(3deg); background: #fdd835;"></div>
+        <div class="note-back"></div>
+        <div id="topNote" class="note-top">🦏 Tap Me</div>
+    </div>
+
+    <script>
+        const note = document.getElementById('topNote');
+        
+        const launchRhino = (e) => {
+            e.preventDefault();
+            note.innerText = ""; 
+            note.classList.add('animate-rhino');
+        };
+
+        note.addEventListener('click', launchRhino);
+        note.addEventListener('touchstart', launchRhino, {passive: false});
+    </script>
+</body>
+</html>
