@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rhino Fold</title>
+    <title>Infinity Rhino Love</title>
     <style>
         body {
             margin: 0;
@@ -22,21 +22,23 @@
             height: 200px;
         }
 
+        /* Background notes in darker greys */
         .note-back {
             position: absolute;
             width: 200px;
             height: 200px;
-            background: #ffeb3b;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            background: #7f8c8d;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
             transform: rotate(-2deg);
         }
 
+        /* Top Note - Modern Grey */
         .note-top {
             position: absolute;
             width: 200px;
             height: 200px;
-            background: #fff176;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            background: #bdc3c7; /* Classic Grey */
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
             cursor: pointer;
             display: flex;
             justify-content: center;
@@ -44,40 +46,38 @@
             font-family: sans-serif;
             font-weight: bold;
             font-size: 24px;
-            color: #555;
+            color: #2c3e50;
             z-index: 10;
             user-select: none;
-            transition: opacity 0.3s;
+            text-align: center;
+            transition: all 0.5s ease;
         }
 
-        /* The Rhino "Heavy" Fold Animation */
-        @keyframes rhinoFold {
-            0% { transform: scale(1) rotate(0); clip-path: inset(0); }
-            20% { /* Fold into a thick triangle (The Body) */
-                transform: scale(0.9) rotateX(20deg);
-                clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-            }
-            40% { /* Adding the 'Horn' and 'Tail' points */
-                transform: scale(0.8) rotateY(30deg);
-                clip-path: polygon(20% 40%, 50% 0%, 80% 40%, 100% 100%, 0% 100%);
-            }
-            60% { /* Settling into the Rhino shape */
-                transform: scale(0.6) translate(-20px, 10px);
+        /* The Rhino Figure-8 Path */
+        @keyframes rhinoInfinity {
+            0% { transform: translate(0, 0) rotate(0deg) scale(0.5); }
+            25% { transform: translate(180px, -80px) rotate(20deg) scale(0.5); }
+            50% { transform: translate(0, 0) rotate(0deg) scale(0.5); }
+            75% { transform: translate(-180px, 80px) rotate(-20deg) scale(0.5); }
+            100% { transform: translate(0, 0) rotate(0deg) scale(0.5); }
+        }
+
+        /* The Initial Fold into Rhino Shape */
+        @keyframes foldToRhino {
+            0% { transform: scale(1); clip-path: inset(0); }
+            100% { 
+                transform: scale(0.5); 
+                /* Rhino Silhouette Clip-Path */
                 clip-path: polygon(10% 40%, 30% 10%, 40% 40%, 90% 40%, 100% 100%, 0% 100%);
-                opacity: 1;
-            }
-            80% { /* Charging forward */
-                transform: scale(0.55) translate(100px, 10px);
-                opacity: 1;
-            }
-            100% { /* Exit Stage Right */
-                transform: scale(0.5) translate(2000px, 10px);
-                opacity: 0;
             }
         }
 
-        .animate-rhino {
-            animation: rhinoFold 4s forwards ease-in-out;
+        .rhino-shape {
+            animation: foldToRhino 1.5s forwards ease-in-out;
+        }
+
+        .infinity-charge {
+            animation: rhinoInfinity 5s infinite ease-in-out;
             pointer-events: none;
         }
     </style>
@@ -85,22 +85,40 @@
 <body>
 
     <div class="stack">
-        <div class="note-back" style="transform: rotate(3deg); background: #fdd835;"></div>
+        <div class="note-back" style="transform: rotate(3deg); background: #95a5a6;"></div>
         <div class="note-back"></div>
-        <div id="topNote" class="note-top">🦏 Tap Me</div>
+        <div id="topNote" class="note-top">Tap Me</div>
     </div>
 
     <script>
         const note = document.getElementById('topNote');
-        
-        const launchRhino = (e) => {
-            e.preventDefault();
-            note.innerText = ""; 
-            note.classList.add('animate-rhino');
+        let active = false;
+
+        const startRhino = (e) => {
+            if (active) return;
+            active = true;
+            if(e) e.preventDefault();
+
+            // 1. Change text
+            note.innerText = "I Love You";
+            note.style.background = "#95a5a6"; // Darken slightly on tap
+            note.style.color = "white";
+
+            // 2. Fold into Rhino
+            setTimeout(() => {
+                note.innerText = "";
+                note.classList.add('rhino-shape');
+                
+                // 3. Start the infinite figure-8 charge
+                setTimeout(() => {
+                    note.classList.remove('rhino-shape');
+                    note.classList.add('infinity-charge');
+                }, 1500);
+            }, 1200);
         };
 
-        note.addEventListener('click', launchRhino);
-        note.addEventListener('touchstart', launchRhino, {passive: false});
+        note.addEventListener('click', startRhino);
+        note.addEventListener('touchstart', startRhino, {passive: false});
     </script>
 </body>
 </html>
